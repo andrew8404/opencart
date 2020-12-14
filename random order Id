@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>Random number for order id</name>
+  <code>numeric-random-order-id</code>
+  <version>3.0.3</version>
+  <author>admin</author>
+  <link>http://#</link>
+	<file path="catalog/model/checkout/order.php">  
+		<operation>
+			<search index="0"><![CDATA[addOrder($data)]]></search>
+			<add position="after"><![CDATA[
+		// Begin random number for order id
+		$UltimoPedido = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` ORDER BY `" . DB_PREFIX . "order`.`order_id` DESC LIMIT 1");
+		
+		if(isset($UltimoPedido->row['order_id'])){
+		$UltimoPedido = rand(2,6)+$UltimoPedido->row['order_id'];
+		}
+		else{
+		$UltimoPedido = rand(2,6);
+		}
+		// Begin random number for order id
+		]]></add>
+		</operation>	
+		<operation>
+			<search><![CDATA[$this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET]]></search>
+			<add position="replace"><![CDATA[$this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET order_id = '" . $this->db->escape($UltimoPedido) . "',]]></add>
+		</operation>
+    </file>
+</modification>
